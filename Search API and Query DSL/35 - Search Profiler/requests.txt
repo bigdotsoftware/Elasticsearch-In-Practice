@@ -1,0 +1,78 @@
+POST mylogs-apache-v2-*/_search
+{
+  "profile": true, 
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "agent": {
+              "value": "firefox"
+            }
+          }
+        },
+        {
+          "range": {
+            "@timestamp": {
+              "gte": "2020-01-01T00:00:00.000Z",
+              "lte": "2023-01-01T00:00:00.000Z"
+            }
+          }
+        },
+        {
+          "wildcard": {
+            "agent": {
+              "value": "*o*"
+            }
+          }
+        },
+        {
+          "span_near": {
+            "clauses": [
+              {
+                "span_term": {
+                  "agent": {
+                    "value": "mozilla"
+                  }
+                }
+              },
+              {
+                "span_term": {
+                  "agent": {
+                    "value": "android"
+                  }
+                }
+              }
+            ],
+            "slop": 12,
+            "in_order": false
+          }
+        },
+        {
+          "geo_distance": {
+            "distance": "10000km",
+            "geoip.location": {
+              "lat": 40.73,
+              "lon": -74.1
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "NAME": {
+      "date_histogram": {
+        "field": "@timestamp",
+        "calendar_interval": "hour"
+      },
+      "aggs": {
+        "NAME": {
+          "stats": {
+            "field": "bytes"
+          }
+        }
+      }
+    }
+  }
+}

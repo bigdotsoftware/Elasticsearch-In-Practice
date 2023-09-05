@@ -1,0 +1,39 @@
+GET /_search
+{
+  "query": {
+    "term": {
+      "agent": {
+        "value": "mozilla",
+        "boost": 1.0
+      }
+    }
+  }
+}
+
+
+POST documents-books-v1/_search?explain=false
+{
+  "_source": ["description" , "title"], 
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "description": {
+              "value": "javascript"
+            }
+          }
+        },
+        {
+          "term": {
+            "title": {
+              "value": "javascript",
+              "boost": 100
+            }
+          }
+        }
+        
+      ]
+    }
+  }
+}

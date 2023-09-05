@@ -1,0 +1,147 @@
+POST test-custom-score-v1/_doc
+{"title": "the brown fox fox fox fox"}
+POST test-custom-score-v1/_doc
+{"title": "the quick brown fox jumps over the lazy dog"}
+POST test-custom-score-v1/_doc
+{"title": "fox and lazy dog"}
+
+POST /test-custom-score-v1/_search
+{
+  "explain": true, 
+  "query": {
+    "term": {
+      "title": {
+        "value": "fox",
+        "boost": 100
+      }
+    }
+  }
+}
+
+POST mylogs-apache-v2*/_search
+{
+  "_source": {
+    "includes": "bytes"
+  }, 
+  "query": {
+      "function_score": {
+          "boost_mode": "replace", 
+          "query": {
+              "term": {
+                "verb": {
+                  "value": "POST"
+                }
+              }
+          },
+          "script_score" : {
+              "script" : {
+                "source": "doc['bytes'].value"
+              }
+          }
+      }
+  }
+}
+
+POST mylogs-apache-v2*/_search
+{
+  "_source": {
+    "includes": "bytes"
+  }, 
+  "query": {
+      "function_score": {
+        "boost_mode": "replace", 
+        "query": {
+          "term": {
+            "verb": {
+              "value": "POST"
+            }
+          }
+        },
+        "script_score" : {
+            "script" : {
+              "source": "Math.log(2 + doc['bytes'].value)"
+            }
+        }
+      }
+  }
+}
+
+POST mylogs-apache-v2*/_search
+{
+  "_source": {
+    "includes": "bytes"
+  }, 
+  "query": {
+      "function_score": {
+        "boost_mode": "replace", 
+        "query": {
+          "term": {
+            "verb": {
+              "value": "POST"
+            }
+          }
+        },
+        "script_score" : {
+            "script" : {
+              "source": "doc.containsKey('bytes') ? Math.log(2 + doc['bytes'].value) : 0"
+            }
+        }
+      }
+  }
+}
+
+POST mylogs-apache-v2*/_search
+{
+  "_source": {
+    "includes": "agent"
+  }, 
+  "query": {
+      "function_score": {
+        "boost_mode": "replace", 
+        "query": {
+          "term": {
+            "verb": {
+              "value": "POST"
+            }
+          }
+        },
+        "script_score" : {
+            "script" : {
+              "source": "doc.containsKey('agent') ? params._source.agent.length() : 0"
+            }
+        }
+      }
+  }
+}
+
+POST mylogs-apache-v2*/_search
+{
+    "explain": true,
+    "query": {
+        "function_score": {
+            "random_score": {
+                "seed": 10,
+                "field": "_seq_no"
+            }
+        }
+    }
+}
+
+POST /mylogs-apache-v2*/_search
+{
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "term": {
+            "verb": {
+              "value": "POST",
+              "boost": 2000
+            }
+          }
+        }
+      ],
+      "minimum_should_match": 0
+    }
+  }
+}

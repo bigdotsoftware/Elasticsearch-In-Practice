@@ -1,0 +1,103 @@
+POST /news-articles-v1/_doc
+{
+  "title" : "Market condition in USA",
+  "content" : "Current condition of the Market in USA is lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse fermentum nec lacus nec hendrerit. Pellentesque tristique mattis sagittis. Vestibulum nec vestibulum odio. Integer eu diam urna. Mauris condimentum sapien magna, ac vehicula orci vulputate eget. Sed aliquam sem ut ultricies volutpat. Nullam metus lectus, consequat eget suscipit quis, suscipit sed felis. Sed id turpis dictum erat pretium lobortis. Duis id nisi id nisl imperdiet convallis. Donec dignissim, lorem vel facilisis commodo, risus ligula euismod tellus, vitae porttitor justo odio vel turpis. Donec molestie vitae dolor sit amet imperdiet. Import of goods from China impact the domestic id sapien convallis, aliquam risus ac, aliquet dolor. Suspendisse dolor arcu, viverra eget erat eget, elementum dignissim dolor. Proin cursus bibendum diam sit amet vulputate. Mauris malesuada maximus lorem, sit amet cursus quam faucibus non. Fusce malesuada magna ac erat blandit, quis cursus nibh eleifend. Suspendisse malesuada quis nisl eget aliquam. Morbi felis elit, dignissim non pharetra in, volutpat a enim. Cras tempus leo in metus placerat, eget egestas ante sagittis. Proin pretium diam sed nisi tincidunt, sed tincidunt ligula dictum. Etiam auctor fermentum est eu luctus. Phasellus tincidunt erat non enim imperdiet mattis."
+}
+
+PUT /news-comments-v1-2023.01/
+{
+  "settings": {
+    "number_of_shards": 5
+  }
+}
+
+POST /news-comments-v1-2023.01/_doc
+{
+  "user": "Mike",
+  "artcileId": "EfQqOIQBn3UMoQ4uZcbU",
+  "comment" : "great article!"
+}
+
+POST /news-comments-v1-2023.01/_refresh
+
+GET _cat/shards?index=news-comments-v1-2023.01&v
+
+POST /news-comments-v1-2023.01/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "term": {
+            "artcileId": "EfQqOIQBn3UMoQ4uZcbU"
+          }
+        }
+      ]
+    }
+  }
+}
+
+POST /news-comments-v1-2023.01/_doc?routing=EfQqOIQBn3UMoQ4uZcbU
+{
+  "user": "Mike",
+  "comment" : "great article!"
+}
+
+POST /news-comments-v1-2023.01/_refresh
+
+GET _cat/shards?index=news-comments-v1-2023.01&v
+
+POST /news-comments-v1-2023.01/_search?routing=EfQqOIQBn3UMoQ4uZcbU
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "term": {
+            "artcileId": "EfQqOIQBn3UMoQ4uZcbU"
+          }
+        }
+      ]
+    }
+  }
+}
+
+PUT /news-comments-v2-2023.01/
+{
+  "settings": {
+    "number_of_shards": 5
+  },
+  "mappings": {
+    "_routing": {
+      "required": true
+    }
+  }
+}
+
+POST /news-comments-v2-2023.01/_doc
+{
+  "user": "Mike",
+  "artcileId": "EfQqOIQBn3UMoQ4uZcbU",
+  "comment" : "great article!"
+}
+
+POST /news-comments-v2-2023.01/_doc?routing=EfQqOIQBn3UMoQ4uZcbU
+{
+  "user": "Mike",
+  "artcileId": "EfQqOIQBn3UMoQ4uZcbU",
+  "comment" : "great article!"
+}
+
+POST /news-comments-v1-2023.01/_search_shards
+
+POST /news-comments-v1-2023.01/_search_shards?routing=EfQqOIQBn3UMoQ4uZcbU
+
+PUT /news-comments-v3-2023.01/
+{
+  "settings": {
+    "number_of_shards": 5,
+    "routing_partition_size":3,
+    "number_of_routing_shards" : 5
+  }
+}
+

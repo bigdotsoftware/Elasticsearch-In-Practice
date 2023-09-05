@@ -1,0 +1,251 @@
+1.
+
+POST documents-books-v1/_search?explain=false
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "description": {
+              "value": "javascript"
+            }
+          }
+        },
+        {
+          "term": {
+            "subtitle": {
+              "value": "web"
+            }
+          }
+        }
+      ],
+      "filter": [
+        {
+          "range": {
+            "published": {
+              "gte": "2012-07-01T00:00:00.000Z",
+              "lte": "2023-12-01T00:00:00.000Z"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+2.
+POST documents-books-v1/_search?explain=false
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "description": {
+              "value": "javascript"
+            }
+          }
+        },
+        {
+          "term": {
+            "subtitle": {
+              "value": "web"
+            }
+          }
+        }
+      ],
+      "filter": [
+        {
+          "range": {
+            "published": {
+              "gte": "2012-07-01T00:00:00.000Z",
+              "lte": "2023-12-01T00:00:00.000Z"
+            }
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "term": {
+            "description": {
+              "value": "experience"
+            }
+          }
+        }
+      ],
+         }
+  }
+}
+
+3.
+POST documents-books-v1/_search?explain=false
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "description": {
+              "value": "javascript"
+            }
+          }
+        },
+        {
+          "term": {
+            "subtitle": {
+              "value": "web"
+            }
+          }
+        }
+      ],
+      "filter": [
+        {
+          "range": {
+            "published": {
+              "gte": "2012-07-01T00:00:00.000Z",
+              "lte": "2023-12-01T00:00:00.000Z"
+            }
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "term": {
+            "description": {
+              "value": "experience"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "sort": [
+    {
+      "onstock": {
+        "order": "desc"
+      }
+    },
+    {
+      "_score": {
+        "order": "desc"
+      }
+    }
+  ]
+}
+
+4.
+POST documents-books-v1/_search?explain=false
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "description": {
+              "value": "javascript"
+            }
+          }
+        },
+        {
+          "term": {
+            "subtitle": {
+              "value": "web"
+            }
+          }
+        }
+      ],
+      "filter": [
+        {
+          "range": {
+            "published": {
+              "gte": "2012-07-01T00:00:00.000Z",
+              "lte": "2023-12-01T00:00:00.000Z"
+            }
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "term": {
+            "description": {
+              "value": "experience"
+            }
+          }
+        }
+      ],
+      "should": [
+        {
+          "term": {
+            "instock": {
+              "value": "true",
+              "boost": 200
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+5.
+POST documents-books-v1/_search?explain=false
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "description": {
+              "value": "javascript"
+            }
+          }
+        },
+        {
+          "term": {
+            "subtitle": {
+              "value": "web"
+            }
+          }
+        }
+      ],
+      "filter": [
+        {
+          "range": {
+            "published": {
+              "gte": "2012-07-01T00:00:00.000Z",
+              "lte": "2023-12-01T00:00:00.000Z"
+            }
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "term": {
+            "description": {
+              "value": "experience"
+            }
+          }
+        }
+      ],
+      "should": [
+        {
+          "term": {
+            "instock": {
+              "value": "true",
+              "boost": 200
+            }
+          }
+        },
+        {
+          "term": {
+            "title": {
+              "value": "spiderman"
+            }
+          }
+        }
+      ],
+      "minimum_should_match": 2
+    }
+  }
+}

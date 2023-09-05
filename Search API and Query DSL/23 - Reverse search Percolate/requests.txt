@@ -1,0 +1,82 @@
+POST _bulk
+{ "index" : { "_index" : "alerts-ip-v1"} }
+{ "ip" : "105.178.122.203", "comment": "Potentail fraud bot"}
+{ "index" : { "_index" : "alerts-ip-v1"} }
+{ "ip" : "141.82.136.83", "comment": "Alert!, Immediate action to Administrators"}
+
+
+DELETE alerts-ip-v1
+
+PUT /alerts-ip-v1
+{
+  "mappings": {
+    "properties": {
+      "comment": {
+        "type": "text"
+      },
+      "clientip" : {
+        "type": "ip"
+      },
+      "query": {
+        "type": "percolator"
+      }
+    }
+  }
+}
+
+POST alerts-ip-v1/_doc
+{
+  "query": {
+    "term": {
+      "clientip": {
+        "value": "105.178.122.203"
+      }
+    }
+  },
+  "comment": "Potentail fraud bot"
+}
+
+POST alerts-ip-v1/_doc
+{
+  "query": {
+    "term": {
+      "clientip": {
+        "value": "141.82.136.83"
+      }
+    }
+  },
+  "comment": "Alert!, Immediate action to Administrators"
+}
+
+GET alerts-ip-v1/_search
+
+
+GET /alerts-ip-v1/_search
+{
+  "query": {
+    "percolate": {
+      "field": "query",
+      "document": {
+        "agent": "Mozilla",
+        "verb": "POST",
+        "bytes": 5082,
+        "clientip": "23.235.12.45"
+      }
+    }
+  }
+}
+
+GET /alerts-ip-v1/_search
+{
+  "query": {
+    "percolate": {
+      "field": "query",
+      "document": {
+        "agent": "Chrome",
+        "verb": "GET",
+        "bytes": 3564,
+        "clientip": "141.82.136.83"
+      }
+    }
+  }
+}

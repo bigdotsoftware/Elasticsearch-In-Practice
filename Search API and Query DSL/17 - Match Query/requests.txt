@@ -1,0 +1,166 @@
+GET mylogs-apache-v1-2022.08.10/_search
+{
+  "query": {
+    "term": {
+      "agent": {
+        "value": "mozilla"
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v1-2022.08.10/_search
+{
+  "query": {
+    "match": {
+      "agent": {
+        "query": "Mozilla"
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v1-2022.08.10/_search
+{
+  "query": {
+    "match": {
+      "agent": {
+        "query": "Mozilla",
+        "analyzer": "default"
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v1-2022.08.10/_search
+{
+  "query": {
+    "match": {
+      "agent": {
+        "query": "Mozilla Gecko/45",
+        "analyzer": "default"
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v1-2022.08.10/_search
+{
+  "query": {
+    "match": {
+      "agent": {
+        "query": "Mozilla Gecko/45",
+        "analyzer": "default",
+        "operator": "and"
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v1-2022.08.10/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "agent": {
+              "value": "mozilla"
+            }
+          }
+        },
+        {
+          "term": {
+            "agent": {
+              "value": "gecko"
+            }
+          }
+        },
+        {
+          "term": {
+            "agent": {
+              "value": "45"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+{
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "term": {
+            "agent": {
+              "value": "mozilla"
+            }
+          }
+        },
+        {
+          "term": {
+            "agent": {
+              "value": "gecko"
+            }
+          }
+        },
+        {
+          "term": {
+            "agent": {
+              "value": "45"
+            }
+          }
+        }
+      ],
+      "minimum_should_match": 2
+    }
+  }
+}
+
+{
+  "query": {
+    "match": {
+      "agent": {
+        "query": "Mozilla Gecko/45",
+        "analyzer": "default",
+        "operator": "or",
+        "minimum_should_match": 2
+      }
+    }
+  }
+}
+
+{
+  "query": {
+    "match": {
+      "agent": {
+        "query": "Maazilla Gucko",
+        "analyzer": "default",
+        "operator": "or",
+        "minimum_should_match": 2,
+        "fuzziness": 2
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v1-2022.08.10/_search
+{
+  "query": {
+    "match": {
+      "agent": {
+        "query": "Maazilla Gucko",
+        "analyzer": "default",
+        "operator": "or",
+        "minimum_should_match": 2,
+        "fuzziness": "AUTO",
+        "max_expansions": 10,
+        "fuzzy_rewrite": "top_terms_blended_freqs_10",
+        "fuzzy_transpositions" : true,
+        "prefix_length" : 4
+      }
+    }
+  }
+}

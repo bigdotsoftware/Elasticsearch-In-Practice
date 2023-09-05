@@ -1,0 +1,73 @@
+PUT /locations-v1/
+{
+  "mappings": {
+    "properties": {
+      "location" : {
+        "type": "geo_point"
+      }
+    }
+  }
+}
+
+POST /locations-v1/_doc
+{
+  "location": "POINT (21.0182 52.2471)",
+  "name": "Restarurant #1"
+}
+
+
+POST /locations-v1/_doc
+{
+  "location": {
+    "lat": 52.2471,
+    "lon": 21.0182
+  },
+  "name": "Restarurant #1"
+}
+
+
+POST /locations-v1/_doc
+{
+  "location": [21.0182, 52.2471],
+  "name": "Restarurant #1"
+}
+
+GET locations-v1/_search
+
+POST mylogs-apache-v2*/_search
+{
+  "query": {
+    "geo_distance": {
+      "distance": "2km",
+      "geoip.location": {
+        "lat": 52.237049,
+        "lon": 21.017532
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v2*/_search
+{
+  "query": {
+    "bool": {
+      "must": {
+        "match_all": {}
+      },
+      "filter": {
+        "geo_bounding_box": {
+          "geoip.location": {
+            "top_left": {
+              "lat": 52.24,
+              "lon": 21.01
+            },
+            "bottom_right": {
+              "lat": 52.23,
+              "lon": 21.02
+            }
+          }
+        }
+      }
+    }
+  }
+}

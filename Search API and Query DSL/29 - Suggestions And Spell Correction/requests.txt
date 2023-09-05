@@ -1,0 +1,161 @@
+POST /mylogs-apache-v2*/_search?pretty
+{
+  "suggest": {
+    "text": "Mazilla developed the Forefax",
+    "simple_phrase": {
+      "phrase": {
+        "field": "agent",
+        "size": 1,
+        "gram_size": 3,
+        "direct_generator": [ {
+          "field": "agent",
+          "suggest_mode": "always"
+        } ],
+        "highlight": {
+          "pre_tag": "<em>",
+          "post_tag": "</em>"
+        }
+      }
+    }
+  }
+}
+
+POST /mylogs-apache-v2*/_search?pretty
+{
+  "suggest": {
+    "text": "Mazilla developed the Forefax",
+    "simple_phrase": {
+      "phrase": {
+        "field": "geoip.country_name",
+        "size": 1,
+        "gram_size": 3,
+        "direct_generator": [ {
+          "field": "geoip.country_name",
+          "suggest_mode": "always"
+        } ],
+        "highlight": {
+          "pre_tag": "<em>",
+          "post_tag": "</em>"
+        }
+      }
+    }
+  }
+}
+
+---------------------------------------------------
+
+PUT countries-list-v2
+{
+  "settings": {
+    "max_ngram_diff" : 5,
+    "analysis": {
+      "analyzer": {
+        "country_analyzer": {
+          "tokenizer": "country_tokenizer",
+          "filter" : ["lowercase"]
+        }
+      },
+      "tokenizer": {
+        "country_tokenizer": {
+          "type": "edge_ngram",
+          "min_gram": 1,
+          "max_gram": 6
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "country" : {
+        "type" : "text",
+        "analyzer": "country_analyzer"
+      }  
+    }
+  }
+}
+
+POST countries-list-v2/_analyze
+{
+  "text": "Panama",
+  "analyzer": "country_analyzer"
+}
+
+PUT countries-list-v3
+{
+  "mappings": {
+    "properties": {
+      "country" : {
+        "type" : "completion"
+      }  
+    }
+  }
+}
+
+POST /_reindex?wait_for_completion=true
+{
+  "conflicts" : "proceed",
+  "source": {
+    "index": "countries-list-v1"
+  },
+  "dest": {
+    "index": "countries-list-v2"
+  }
+}
+
+POST /_reindex?wait_for_completion=true
+{
+  "conflicts" : "proceed",
+  "source": {
+    "index": "countries-list-v1"
+  },
+  "dest": {
+    "index": "countries-list-v3"
+  }
+}
+
+POST /countries-list-v1/_search
+{
+  "query": {
+    "prefix": {
+      "country": {
+        "value": "pa"
+      }
+    }
+  }
+}
+
+POST countries-list-v2/_search
+{
+  "query": {
+    "term": {
+      "country": {
+        "value": "pa"
+      }
+    }
+  }
+}
+
+POST countries-list-v2/_search
+{
+  "query": {
+    "fuzzy": {
+      "country": {
+        "value": "penam"
+      }
+    }
+  }
+}
+
+POST /countries-list-v3/_search?pretty
+{
+  "suggest": {
+    "country-suggest": {
+      "prefix": "pa",
+      "completion": {
+        "field": "country",
+        "size": 10
+      }
+    }
+  }
+}
+

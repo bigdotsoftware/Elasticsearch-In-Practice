@@ -1,0 +1,435 @@
+PUT countries-list-v1/_bulk?refresh
+{ "index" : { } }
+{ "country": "Afghanistan" }
+{ "index" : { } }
+{ "country": "Albania" }
+{ "index" : { } }
+{ "country": "Algeria" }
+{ "index" : { } }
+{ "country": "American Samoa" }
+{ "index" : { } }
+{ "country": "Andorra" }
+{ "index" : { } }
+{ "country": "Angola" }
+{ "index" : { } }
+{ "country": "Antigua and Barbuda" }
+{ "index" : { } }
+{ "country": "Argentina" }
+{ "index" : { } }
+{ "country": "Armenia" }
+{ "index" : { } }
+{ "country": "Aruba" }
+{ "index" : { } }
+{ "country": "Australia" }
+{ "index" : { } }
+{ "country": "Austria" }
+{ "index" : { } }
+{ "country": "Azerbaijan" }
+{ "index" : { } }
+{ "country": "Bahamas, The" }
+{ "index" : { } }
+{ "country": "Bahrain" }
+{ "index" : { } }
+{ "country": "Bangladesh" }
+{ "index" : { } }
+{ "country": "Barbados" }
+{ "index" : { } }
+{ "country": "Belarus" }
+{ "index" : { } }
+{ "country": "Belgium" }
+{ "index" : { } }
+{ "country": "Belize" }
+{ "index" : { } }
+{ "country": "Benin" }
+{ "index" : { } }
+{ "country": "Bermuda" }
+{ "index" : { } }
+{ "country": "Bhutan" }
+{ "index" : { } }
+{ "country": "Bolivia" }
+{ "index" : { } }
+{ "country": "Bosnia and Herzegovina" }
+{ "index" : { } }
+{ "country": "Botswana" }
+{ "index" : { } }
+{ "country": "Brazil" }
+{ "index" : { } }
+{ "country": "British Virgin Islands" }
+{ "index" : { } }
+{ "country": "Brunei Darussalam" }
+{ "index" : { } }
+{ "country": "Bulgaria" }
+{ "index" : { } }
+{ "country": "Burkina Faso" }
+{ "index" : { } }
+{ "country": "Burundi" }
+{ "index" : { } }
+{ "country": "Cabo Verde" }
+{ "index" : { } }
+{ "country": "Cambodia" }
+{ "index" : { } }
+{ "country": "Cameroon" }
+{ "index" : { } }
+{ "country": "Canada" }
+{ "index" : { } }
+{ "country": "Cayman Islands" }
+{ "index" : { } }
+{ "country": "Central African Republic" }
+{ "index" : { } }
+{ "country": "Chad" }
+{ "index" : { } }
+{ "country": "Channel Islands" }
+{ "index" : { } }
+{ "country": "Chile" }
+{ "index" : { } }
+{ "country": "China" }
+{ "index" : { } }
+{ "country": "Colombia" }
+{ "index" : { } }
+{ "country": "Comoros" }
+{ "index" : { } }
+{ "country": "Congo, Dem. Rep." }
+{ "index" : { } }
+{ "country": "Congo, Rep." }
+{ "index" : { } }
+{ "country": "Costa Rica" }
+{ "index" : { } }
+{ "country": "Cote d'Ivoire" }
+{ "index" : { } }
+{ "country": "Croatia" }
+{ "index" : { } }
+{ "country": "Cuba" }
+{ "index" : { } }
+{ "country": "Curacao" }
+{ "index" : { } }
+{ "country": "Cyprus" }
+{ "index" : { } }
+{ "country": "Czechia" }
+{ "index" : { } }
+{ "country": "Denmark" }
+{ "index" : { } }
+{ "country": "Djibouti" }
+{ "index" : { } }
+{ "country": "Dominica" }
+{ "index" : { } }
+{ "country": "Dominican Republic" }
+{ "index" : { } }
+{ "country": "Ecuador" }
+{ "index" : { } }
+{ "country": "Egypt, Arab Rep." }
+{ "index" : { } }
+{ "country": "El Salvador" }
+{ "index" : { } }
+{ "country": "Equatorial Guinea" }
+{ "index" : { } }
+{ "country": "Eritrea" }
+{ "index" : { } }
+{ "country": "Estonia" }
+{ "index" : { } }
+{ "country": "Eswatini" }
+{ "index" : { } }
+{ "country": "Ethiopia" }
+{ "index" : { } }
+{ "country": "Faroe Islands" }
+{ "index" : { } }
+{ "country": "Fiji" }
+{ "index" : { } }
+{ "country": "Finland" }
+{ "index" : { } }
+{ "country": "France" }
+{ "index" : { } }
+{ "country": "French Polynesia" }
+{ "index" : { } }
+{ "country": "Gabon" }
+{ "index" : { } }
+{ "country": "Gambia, The" }
+{ "index" : { } }
+{ "country": "Georgia" }
+{ "index" : { } }
+{ "country": "Germany" }
+{ "index" : { } }
+{ "country": "Ghana" }
+{ "index" : { } }
+{ "country": "Gibraltar" }
+{ "index" : { } }
+{ "country": "Greece" }
+{ "index" : { } }
+{ "country": "Greenland" }
+{ "index" : { } }
+{ "country": "Grenada" }
+{ "index" : { } }
+{ "country": "Guam" }
+{ "index" : { } }
+{ "country": "Guatemala" }
+{ "index" : { } }
+{ "country": "Guinea" }
+{ "index" : { } }
+{ "country": "Guinea-Bissau" }
+{ "index" : { } }
+{ "country": "Guyana" }
+{ "index" : { } }
+{ "country": "Haiti" }
+{ "index" : { } }
+{ "country": "Honduras" }
+{ "index" : { } }
+{ "country": "Hong Kong SAR, China" }
+{ "index" : { } }
+{ "country": "Hungary" }
+{ "index" : { } }
+{ "country": "Iceland" }
+{ "index" : { } }
+{ "country": "India" }
+{ "index" : { } }
+{ "country": "Indonesia" }
+{ "index" : { } }
+{ "country": "Iran, Islamic Rep." }
+{ "index" : { } }
+{ "country": "Iraq" }
+{ "index" : { } }
+{ "country": "Ireland" }
+{ "index" : { } }
+{ "country": "Isle of Man" }
+{ "index" : { } }
+{ "country": "Israel" }
+{ "index" : { } }
+{ "country": "Italy" }
+{ "index" : { } }
+{ "country": "Jamaica" }
+{ "index" : { } }
+{ "country": "Japan" }
+{ "index" : { } }
+{ "country": "Jordan" }
+{ "index" : { } }
+{ "country": "Kazakhstan" }
+{ "index" : { } }
+{ "country": "Kenya" }
+{ "index" : { } }
+{ "country": "Kiribati" }
+{ "index" : { } }
+{ "country": "Korea, Dem. People's Rep." }
+{ "index" : { } }
+{ "country": "Korea, Rep." }
+{ "index" : { } }
+{ "country": "Kosovo" }
+{ "index" : { } }
+{ "country": "Kuwait" }
+{ "index" : { } }
+{ "country": "Kyrgyz Republic" }
+{ "index" : { } }
+{ "country": "Lao PDR" }
+{ "index" : { } }
+{ "country": "Latvia" }
+{ "index" : { } }
+{ "country": "Lebanon" }
+{ "index" : { } }
+{ "country": "Lesotho" }
+{ "index" : { } }
+{ "country": "Liberia" }
+{ "index" : { } }
+{ "country": "Libya" }
+{ "index" : { } }
+{ "country": "Liechtenstein" }
+{ "index" : { } }
+{ "country": "Lithuania" }
+{ "index" : { } }
+{ "country": "Luxembourg" }
+{ "index" : { } }
+{ "country": "Macao SAR, China" }
+{ "index" : { } }
+{ "country": "Madagascar" }
+{ "index" : { } }
+{ "country": "Malawi" }
+{ "index" : { } }
+{ "country": "Malaysia" }
+{ "index" : { } }
+{ "country": "Maldives" }
+{ "index" : { } }
+{ "country": "Mali" }
+{ "index" : { } }
+{ "country": "Malta" }
+{ "index" : { } }
+{ "country": "Marshall Islands" }
+{ "index" : { } }
+{ "country": "Mauritania" }
+{ "index" : { } }
+{ "country": "Mauritius" }
+{ "index" : { } }
+{ "country": "Mexico" }
+{ "index" : { } }
+{ "country": "Micronesia, Fed. Sts." }
+{ "index" : { } }
+{ "country": "Moldova" }
+{ "index" : { } }
+{ "country": "Monaco" }
+{ "index" : { } }
+{ "country": "Mongolia" }
+{ "index" : { } }
+{ "country": "Montenegro" }
+{ "index" : { } }
+{ "country": "Morocco" }
+{ "index" : { } }
+{ "country": "Mozambique" }
+{ "index" : { } }
+{ "country": "Myanmar" }
+{ "index" : { } }
+{ "country": "Namibia" }
+{ "index" : { } }
+{ "country": "Nauru" }
+{ "index" : { } }
+{ "country": "Nepal" }
+{ "index" : { } }
+{ "country": "Netherlands" }
+{ "index" : { } }
+{ "country": "New Caledonia" }
+{ "index" : { } }
+{ "country": "New Zealand" }
+{ "index" : { } }
+{ "country": "Nicaragua" }
+{ "index" : { } }
+{ "country": "Niger" }
+{ "index" : { } }
+{ "country": "Nigeria" }
+{ "index" : { } }
+{ "country": "North Macedonia" }
+{ "index" : { } }
+{ "country": "Northern Mariana Islands" }
+{ "index" : { } }
+{ "country": "Norway" }
+{ "index" : { } }
+{ "country": "Oman" }
+{ "index" : { } }
+{ "country": "Pakistan" }
+{ "index" : { } }
+{ "country": "Palau" }
+{ "index" : { } }
+{ "country": "Panama" }
+{ "index" : { } }
+{ "country": "Papua New Guinea" }
+{ "index" : { } }
+{ "country": "Paraguay" }
+{ "index" : { } }
+{ "country": "Peru" }
+{ "index" : { } }
+{ "country": "Philippines" }
+{ "index" : { } }
+{ "country": "Poland" }
+{ "index" : { } }
+{ "country": "Portugal" }
+{ "index" : { } }
+{ "country": "Puerto Rico" }
+{ "index" : { } }
+{ "country": "Qatar" }
+{ "index" : { } }
+{ "country": "Romania" }
+{ "index" : { } }
+{ "country": "Russian Federation" }
+{ "index" : { } }
+{ "country": "Rwanda" }
+{ "index" : { } }
+{ "country": "Samoa" }
+{ "index" : { } }
+{ "country": "San Marino" }
+{ "index" : { } }
+{ "country": "Sao Tome and Principe" }
+{ "index" : { } }
+{ "country": "Saudi Arabia" }
+{ "index" : { } }
+{ "country": "Senegal" }
+{ "index" : { } }
+{ "country": "Serbia" }
+{ "index" : { } }
+{ "country": "Seychelles" }
+{ "index" : { } }
+{ "country": "Sierra Leone" }
+{ "index" : { } }
+{ "country": "Singapore" }
+{ "index" : { } }
+{ "country": "Sint Maarten (Dutch part)" }
+{ "index" : { } }
+{ "country": "Slovak Republic" }
+{ "index" : { } }
+{ "country": "Slovenia" }
+{ "index" : { } }
+{ "country": "Solomon Islands" }
+{ "index" : { } }
+{ "country": "Somalia" }
+{ "index" : { } }
+{ "country": "South Africa" }
+{ "index" : { } }
+{ "country": "South Sudan" }
+{ "index" : { } }
+{ "country": "Spain" }
+{ "index" : { } }
+{ "country": "Sri Lanka" }
+{ "index" : { } }
+{ "country": "St. Kitts and Nevis" }
+{ "index" : { } }
+{ "country": "St. Lucia" }
+{ "index" : { } }
+{ "country": "St. Martin (French part)" }
+{ "index" : { } }
+{ "country": "St. Vincent and the Grenadines" }
+{ "index" : { } }
+{ "country": "Sudan" }
+{ "index" : { } }
+{ "country": "Suriname" }
+{ "index" : { } }
+{ "country": "Sweden" }
+{ "index" : { } }
+{ "country": "Switzerland" }
+{ "index" : { } }
+{ "country": "Syrian Arab Republic" }
+{ "index" : { } }
+{ "country": "Tajikistan" }
+{ "index" : { } }
+{ "country": "Tanzania" }
+{ "index" : { } }
+{ "country": "Thailand" }
+{ "index" : { } }
+{ "country": "Timor-Leste" }
+{ "index" : { } }
+{ "country": "Togo" }
+{ "index" : { } }
+{ "country": "Tonga" }
+{ "index" : { } }
+{ "country": "Trinidad and Tobago" }
+{ "index" : { } }
+{ "country": "Tunisia" }
+{ "index" : { } }
+{ "country": "Turkiye" }
+{ "index" : { } }
+{ "country": "Turkmenistan" }
+{ "index" : { } }
+{ "country": "Turks and Caicos Islands" }
+{ "index" : { } }
+{ "country": "Tuvalu" }
+{ "index" : { } }
+{ "country": "Uganda" }
+{ "index" : { } }
+{ "country": "Ukraine" }
+{ "index" : { } }
+{ "country": "United Arab Emirates" }
+{ "index" : { } }
+{ "country": "United Kingdom" }
+{ "index" : { } }
+{ "country": "United States" }
+{ "index" : { } }
+{ "country": "Uruguay" }
+{ "index" : { } }
+{ "country": "Uzbekistan" }
+{ "index" : { } }
+{ "country": "Vanuatu" }
+{ "index" : { } }
+{ "country": "Venezuela, RB" }
+{ "index" : { } }
+{ "country": "Vietnam" }
+{ "index" : { } }
+{ "country": "Virgin Islands (U.S.)" }
+{ "index" : { } }
+{ "country": "West Bank and Gaza" }
+{ "index" : { } }
+{ "country": "Yemen, Rep." }
+{ "index" : { } }
+{ "country": "Zambia" }
+{ "index" : { } }
+{ "country": "Zimbabwe" }

@@ -1,0 +1,202 @@
+POST /sample-book-v1/_doc
+{
+  "title": "The great Elasticsearch",
+  "publisher" : {
+    "name" : "Manning Publications",
+    "date" : "2022"
+  },
+  "author": [
+    {
+      "firstname": "Mike",
+      "lastname": "Thomson"
+    },
+    {
+      "firstname": "Joe",
+      "lastname": "Black",
+      "biography": "An American author of over 100 technical books"
+    }
+  ]
+}
+
+POST /sample-book-v1/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "author.firstname": {
+              "value": "mike"
+            }
+          }
+        },
+        {
+          "term": {
+            "author.lastname": {
+              "value": "black"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+GET /sample-book-v1/_mapping
+
+PUT /sample-book-v2/
+{
+  "mappings": {
+    "properties": {
+      "author": {
+        "type": "nested",
+        "properties": {
+          "firstname": {
+            "type": "text"
+          },
+          "lastname": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "biography": {
+            "type": "text"
+          }
+        }
+      },
+      "publisher": {
+        "properties": {
+          "date": {
+            "type": "text"
+          },
+          "name": {
+            "type": "text"
+          }
+        }
+      },
+      "title": {
+        "type": "text"
+      }
+    }
+  }
+}
+
+POST /_reindex?wait_for_completion=true
+{
+  "conflicts" : "proceed",
+  "source": {
+    "index": "sample-book-v1"
+  },
+  "dest": {
+    "index": "sample-book-v2"
+  }
+}
+
+POST /sample-book-v2/_search
+{
+  "query": {
+    "nested": {
+      "path": "author",
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {
+                "author.firstname": {
+                  "value": "mike"
+                }
+              }
+            },
+            {
+              "term": {
+                "author.lastname": {
+                  "value": "black"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+
+POST /sample-book-v2/_search
+{
+  "query": {
+    "nested": {
+      "path": "author",
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {
+                "author.firstname": {
+                  "value": "joe"
+                }
+              }
+            },
+            {
+              "term": {
+                "author.lastname": {
+                  "value": "black"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "sort": [
+    {
+      "author.lastname.keyword": {
+        "order": "asc"
+      }
+    }
+  ]
+}
+
+POST /sample-book-v2/_search
+{
+  "query": {
+    "nested": {
+      "path": "author",
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {
+                "author.firstname": {
+                  "value": "joe"
+                }
+              }
+            },
+            {
+              "term": {
+                "author.lastname": {
+                  "value": "black"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "sort": [
+    {
+      "author.lastname.keyword": {
+             "order" : "asc",
+             "nested": {
+                "path": "author"
+             }
+          }
+    }
+  ]
+}
+

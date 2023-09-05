@@ -1,0 +1,424 @@
+
+POST test-documents-v3/_doc
+{
+"title" : "Market condition in USA",
+"content" : "Current condition of the Market in USA is lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse fermentum nec lacus nec hendrerit. Pellentesque tristique mattis sagittis. Vestibulum nec vestibulum odio. Integer eu diam urna. Mauris condimentum sapien magna, ac vehicula orci vulputate eget. Sed aliquam sem ut ultricies volutpat. Nullam metus lectus, consequat eget suscipit quis, suscipit sed felis. Sed id turpis dictum erat pretium lobortis. Duis id nisi id nisl imperdiet convallis. Donec dignissim, lorem vel facilisis commodo, risus ligula euismod tellus, vitae porttitor justo odio vel turpis. Donec molestie vitae dolor sit amet imperdiet. Import of goods from China impact the domestic id sapien convallis, aliquam risus ac, aliquet dolor. Suspendisse dolor arcu, viverra eget erat eget, elementum dignissim dolor. Proin cursus bibendum diam sit amet vulputate. Mauris malesuada maximus lorem, sit amet cursus quam faucibus non. Fusce malesuada magna ac erat blandit, quis cursus nibh eleifend. Suspendisse malesuada quis nisl eget aliquam. Morbi felis elit, dignissim non pharetra in, volutpat a enim. Cras tempus leo in metus placerat, eget egestas ante sagittis. Proin pretium diam sed nisi tincidunt, sed tincidunt ligula dictum. Etiam auctor fermentum est eu luctus. Phasellus tincidunt erat non enim imperdiet mattis.",
+"url": "https://mysharepoint.domain.com/file3749399274.pdf"
+}
+
+POST test-documents-v3/_search
+{
+  "query": {
+    "term": {
+      "content": {
+        "value": "china"
+      }
+    }
+  }
+}
+
+POST test-documents-v3/_search
+{
+  "_source": {
+    "excludes": [
+      "content"
+    ]
+  },
+  "query": {
+    "term": {
+      "content": {
+        "value": "china"
+      }
+    }
+  }
+}
+
+PUT test-documents-v4/
+{
+  "mappings": {
+    "_source": {
+      "excludes": [
+        "content"
+      ]
+    },
+    "properties": {
+      "url": {
+        "type": "keyword",
+        "ignore_above": 256
+      },
+      "title": {
+        "type": "text"
+      },
+      "content": {
+        "type": "text"
+      }
+    }
+  }
+}
+
+POST /_reindex?wait_for_completion=true
+{
+  "conflicts" : "proceed",
+  "source": {
+    "index": "test-documents-v3"
+  },
+  "dest": {
+    "index": "test-documents-v4"
+  }
+}
+
+POST test-documents-v4/_search
+{
+  "query": {
+    "term": {
+      "content": {
+        "value": "china"
+      }
+    }
+  }
+}
+
+POST test-documents-v4/_doc/wa1kLoQB9z1UGPKaBHRb
+{
+  "title" : "Market condition in USA - new release",
+"content" : "Current condition of the Market in USA is lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse fermentum nec lacus nec hendrerit. Pellentesque tristique mattis sagittis. Vestibulum nec vestibulum odio. Integer eu diam urna. Mauris condimentum sapien magna, ac vehicula orci vulputate eget. Sed aliquam sem ut ultricies volutpat. Nullam metus lectus, consequat eget suscipit quis, suscipit sed felis. Sed id turpis dictum erat pretium lobortis. Duis id nisi id nisl imperdiet convallis. Donec dignissim, lorem vel facilisis commodo, risus ligula euismod tellus, vitae porttitor justo odio vel turpis. Donec molestie vitae dolor sit amet imperdiet. Import of goods from China impact the domestic id sapien convallis, aliquam risus ac, aliquet dolor. Suspendisse dolor arcu, viverra eget erat eget, elementum dignissim dolor. Proin cursus bibendum diam sit amet vulputate. Mauris malesuada maximus lorem, sit amet cursus quam faucibus non. Fusce malesuada magna ac erat blandit, quis cursus nibh eleifend. Suspendisse malesuada quis nisl eget aliquam. Morbi felis elit, dignissim non pharetra in, volutpat a enim. Cras tempus leo in metus placerat, eget egestas ante sagittis. Proin pretium diam sed nisi tincidunt, sed tincidunt ligula dictum. Etiam auctor fermentum est eu luctus. Phasellus tincidunt erat non enim imperdiet mattis.",
+"url": "https://mysharepoint.domain.com/file3749399274.pdf"
+}
+
+POST test-documents-v4/_doc/wa1kLoQB9z1UGPKaBHRb/_update
+{
+  "doc" : {
+    "title" : "Market condition in USA - new release #2"
+  }
+}
+
+POST test-documents-v4/_search
+{
+  "query": {
+    "term": {
+      "content": {
+        "value": "china"
+      }
+    }
+  }
+}
+
+
+-------------------------------------------
+
+GET _cat/segments/mylogs-apache-v2-2022.08.11?v
+
+POST /mylogs-apache-v2-2022.08.11/_forcemerge?max_num_segments=1&flush=true
+
+PUT mylogs-apache-v8-2022.08.11
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 1,
+    "soft_deletes.enabled" : false
+  },
+  "mappings" : {
+    "_source": {
+      "enabled": false
+    }, 
+      "properties" : {
+        "@timestamp" : {
+          "type" : "date"
+        },
+        "@version" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "agent" : {
+          "type" : "text"
+        },
+        "auth" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "bytes" : {
+          "type" : "long"
+        },
+        "clientip" : {
+          "type" : "ip"
+        },
+        "geoip" : {
+          "properties" : {
+            "city_name" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "continent_code" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "country_code2" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "country_code3" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "country_name" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "dma_code" : {
+              "type" : "long"
+            },
+            "ip" : {
+              "type" : "text",
+              "index" : false
+            },
+            "latitude" : {
+              "type" : "float"
+            },
+            "location" : {
+              "type" : "geo_point"
+            },
+            "longitude" : {
+              "type" : "float"
+            },
+            "postal_code" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "region_code" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "region_name" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "timezone" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "host" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "httpversion" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "ident" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "path" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "rawrequest" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "referrer" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "request" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "response" : {
+          "type" : "integer"
+        },
+        "tags" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "type" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "verb" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        }
+      }
+    }
+}
+
+
+PUT mylogs-apache-v9-2022.08.11
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 1,
+    "soft_deletes.enabled" : false
+  },
+  "mappings" : {
+    "_source": {
+      "excludes": ["agent"]
+    }, 
+      "properties" : {
+        "@timestamp" : {
+          "type" : "date"
+        },
+        "@version" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "agent" : {
+          "type" : "text"
+        },
+        "auth" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "bytes" : {
+          "type" : "long"
+        },
+        "clientip" : {
+          "type" : "ip"
+        },
+        "geoip" : {
+          "properties" : {
+            "city_name" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "continent_code" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "country_code2" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "country_code3" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "country_name" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "dma_code" : {
+              "type" : "long"
+            },
+            "ip" : {
+              "type" : "text",
+              "index" : false
+            },
+            "latitude" : {
+              "type" : "float"
+            },
+            "location" : {
+              "type" : "geo_point"
+            },
+            "longitude" : {
+              "type" : "float"
+            },
+            "postal_code" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "region_code" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "region_name" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "timezone" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "host" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "httpversion" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "ident" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "path" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "rawrequest" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "referrer" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "request" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "response" : {
+          "type" : "integer"
+        },
+        "tags" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "type" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "verb" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        }
+      }
+    }
+}
+
+
+POST /_reindex?wait_for_completion=true
+{
+  "conflicts" : "proceed",
+  "source": {
+    "index": "mylogs-apache-v2-2022.08.11"
+  },
+  "dest": {
+    "index": "mylogs-apache-v8-2022.08.11"
+  }
+}
+
+POST /_reindex?wait_for_completion=true
+{
+  "conflicts" : "proceed",
+  "source": {
+    "index": "mylogs-apache-v2-2022.08.11"
+  },
+  "dest": {
+    "index": "mylogs-apache-v9-2022.08.11"
+  }
+}
+
+POST /mylogs-apache-v8-2022.08.11/_forcemerge?max_num_segments=1&flush=true
+
+POST /mylogs-apache-v9-2022.08.11/_forcemerge?max_num_segments=1&flush=true
+
+GET _cat/indices?v&s=index&index=*apache*2022.08.11*
+
+GET mylogs-apache-v8-2022.08.11/_search
+

@@ -1,0 +1,193 @@
+POST mylogs-apache-v2*/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "agent": {
+              "value": "mozilla"
+            }
+          }
+        }
+      ], 
+      "filter": [
+        {
+          "range": {
+            "@timestamp": {
+              "gte": "2022-08-01T00:00:00.000Z",
+              "lte": "2022-08-30T23:59:59.000Z"
+            }
+          }
+        },
+        {
+          "range": {
+            "bytes": {
+              "gte": 4000,
+              "lte": 5000
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+POST mylogs-apache-v2*/_search/template
+{
+  "source": {
+    "query": {
+      "bool": {
+        "must": [
+          {
+            "term": {
+              "agent": {
+                "value": "{{my_agent}}"
+              }
+            }
+          }
+        ],
+        "filter": [
+          {
+            "range": {
+              "@timestamp": {
+                "gte": "{{my_timestamp.from}}",
+                "lte": "{{my_timestamp.to}}"
+              }
+            }
+          },
+          {
+            "range": {
+              "bytes": {
+                "gte": "{{my_bytes.from}}",
+                "lte": "{{my_bytes.to}}"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "params": {
+    "my_agent": "chrome",
+    "my_timestamp": {
+      "from" : "2022-08-01T00:00:00.000Z",
+      "to" : "2022-08-30T23:59:59.000Z"
+    },
+    "my_bytes": {
+      "from" : 4000,
+      "to" : 5000
+    }
+  }
+}
+
+
+POST mylogs-apache-v2*/_search/template
+{
+  "source": """{
+    "query": {
+      "bool": {
+        "must": [
+          {{#my_agent}}
+          {
+            "term": {
+              "agent": {
+                "value": "{{my_agent}}"
+              }
+            }
+          }
+          {{/my_agent}}
+        ],
+        "filter": [
+          {
+            "range": {
+              "@timestamp": {
+                "gte": "{{my_timestamp.from}}",
+                "lte": "{{my_timestamp.to}}"
+              }
+            }
+          },
+          {
+            "range": {
+              "bytes": {
+                "gte": "{{my_bytes.from}}",
+                "lte": "{{my_bytes.to}}"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }""",
+  "params": {
+    "my_agent": "",
+    "my_timestamp": {
+      "from" : "2022-08-01T00:00:00.000Z",
+      "to" : "2022-08-30T23:59:59.000Z"
+    },
+    "my_bytes": {
+      "from" : 4000,
+      "to" : 5000
+    }
+  }
+}
+
+
+POST /_scripts/my_great_query
+{
+  "script": {
+    "lang": "mustache",
+    "source": """{
+      "query": {
+        "bool": {
+          "must": [
+            {{#my_agent}}
+            {
+              "term": {
+                "agent": {
+                  "value": "{{my_agent}}"
+                }
+              }
+            }
+            {{/my_agent}}
+          ],
+          "filter": [
+            {
+              "range": {
+                "@timestamp": {
+                  "gte": "{{my_timestamp.from}}",
+                  "lte": "{{my_timestamp.to}}"
+                }
+              }
+            },
+            {
+              "range": {
+                "bytes": {
+                  "gte": "{{my_bytes.from}}",
+                  "lte": "{{my_bytes.to}}"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }"""
+  }
+}
+
+
+GET /_search/template
+{
+  "id": "my_great_query",
+  "params": {
+    "my_agent": "",
+    "my_timestamp": {
+      "from": "2022-08-01T00:00:00.000Z",
+      "to": "2022-08-30T23:59:59.000Z"
+    },
+    "my_bytes": {
+      "from": 4000,
+      "to": 5000
+    }
+  }
+}

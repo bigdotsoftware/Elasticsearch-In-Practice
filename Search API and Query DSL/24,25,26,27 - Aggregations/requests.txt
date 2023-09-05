@@ -1,0 +1,632 @@
+GET mylogs-apache-v2-2022.08.10/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "@timestamp": {
+              "gte": "2022-08-10T15:00:00.000Z",
+              "lte": "2022-08-10T15:10:00.000Z"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+GET mylogs-apache-v2-2022.08.10/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "@timestamp": {
+              "gte": "2022-08-10T15:00:00.000Z",
+              "lte": "2022-08-10T15:10:00.000Z"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "NAME": {
+      "avg": {
+        "field": "bytes"
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v2-2022.08.10/_search?size=0
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "@timestamp": {
+              "gte": "2022-08-10T15:00:00.000Z",
+              "lte": "2022-08-10T15:10:00.000Z"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "NAME1": {
+      "min": {
+        "field": "bytes"
+      }
+    },
+    "NAME2": {
+      "max": {
+        "field": "bytes"
+      }
+    },
+    "NAME3": {
+      "avg": {
+        "field": "bytes"
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v2-2022.08.10/_search?size=0
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "@timestamp": {
+              "gte": "2022-08-10T15:00:00.000Z",
+              "lte": "2022-08-10T16:10:00.000Z"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "NAME1": {
+      "min": {
+        "field": "bytes"
+      }
+    },
+    "NAME2": {
+      "max": {
+        "field": "bytes"
+      }
+    },
+    "NAME3": {
+      "avg": {
+        "field": "bytes"
+      }
+    },
+    "NAME4": {
+      "value_count": {
+        "field": "bytes"
+      }
+    }
+  }
+}
+
+POST _bulk
+{ "index" : { "_index" : "transactions-books-v1"} }
+{ "title" : "Elasticsearch in action", "payment" : "card", "type": "sale", "amount": 10.99 }
+{ "index" : { "_index" : "transactions-books-v1"} }
+{ "title" : "Fairy tales for all", "payment" : "cash", "type": "sale", "amount": 8.49 }
+{ "index" : { "_index" : "transactions-books-v1"} }
+{ "title" : "JavaScript", "payment" : "cash", "type": "sale", "amount": 11.00 }
+{ "index" : { "_index" : "transactions-books-v1"} }
+{ "title" : "Cooking for dummies", "payment" : "cash", "type": "refund", "amount": 5.99 }
+{ "index" : { "_index" : "transactions-books-v1"} }
+{ "title" : "Elasticsearch", "payment" : "cash", "type": "sale", "amount": 5.99 }
+{ "index" : { "_index" : "transactions-books-v1"} }
+{ "title" : "Query DSL", "payment" : "cash", "type": "sale", "amount": 8.99 }
+
+POST transactions-books-v1/_search?size=0
+{
+    "query" : {
+        "match_all" : {}
+    },
+    "aggs": {
+        "profit": {
+            "scripted_metric": {
+                "init_script" : "state.transactions = []", 
+                "map_script" : "state.transactions.add(doc['type.keyword'].value == \u0027sale\u0027 ? doc.amount.value : -1 * doc.amount.value)",
+                "combine_script" : "double profit = 0; for (t in state.transactions) { profit += t } return profit",
+                "reduce_script" : "double profit = 0; for (a in states) { profit += a } return profit"
+            }
+        }
+    }
+}
+
+GET transactions-books-v1/_search?size=0
+{
+  "runtime_mappings": {
+    "diff": {
+      "type": "double",
+      "script": {
+        "source": "emit(doc['type.keyword'].value == \u0027sale\u0027 ? doc['amount'].value : -1 * doc['amount'].value)"
+      }
+    }
+  },
+  "aggs": {
+    "NAME": {
+      "sum": {
+        "field": "diff"
+      }
+    }
+  }
+}
+
+
+---------------------------------------------
+
+POST /mylogs-apache-v2*/_search?size=0
+{
+  "query": {
+    "match_all": {}
+  },
+  "aggs": {
+    "NAME": {
+      "terms": {
+        "field": "verb"
+      }
+    }
+  }
+}
+
+POST /mylogs-apache-v2*/_search?size=0
+{
+  "query": {
+    "match_all": {}
+  },
+  "aggs": {
+    "NAME": {
+      "terms": {
+        "field": "verb",
+        "size": 10,
+	      "order": { "_key": "asc" }
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v2-2022.08.10/_search?size=0
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "@timestamp": {
+              "gte": "2022-08-10T15:00:00.000Z",
+              "lte": "2022-08-10T16:10:00.000Z"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "NAME": {
+      "terms": {
+        "field": "verb",
+        "size": 10
+      },
+      "aggs": {
+        "NAME1": {
+          "min": {
+            "field": "bytes"
+          }
+        },
+        "NAME2": {
+          "max": {
+            "field": "bytes"
+          }
+        },
+        "NAME3": {
+          "avg": {
+            "field": "bytes"
+          }
+        },
+        "NAME4": {
+          "value_count": {
+            "field": "bytes"
+          }
+        }
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v2*/_search?size=0
+{
+  "query": {
+    "match_all": {}
+  },
+  "aggs": {
+    "NAME": {
+      "histogram": {
+        "field": "bytes",
+        "interval": 50
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v2*/_search?size=0
+{
+  "query": {
+    "match_all": {}
+  },
+  "aggs": {
+    "NAME": {
+      "histogram": {
+        "field": "bytes",
+        "interval": 200,
+        "missing": 0,
+        "offset": 2,
+        "extended_bounds": {
+          "min": 0,
+          "max": 6000
+        }
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v2*/_search?size=0
+{
+  "query": {
+    "match_all": {}
+  },
+  "aggs": {
+    "NAME": {
+      "histogram": {
+        "field": "bytes",
+        "interval": 200,
+        "missing": 0,
+        "offset": 200,
+        "hard_bounds": {
+          "min": 4700,
+          "max": 6000
+        }
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v2*/_search?size=0
+{
+  "query": {
+    "match_all": {}
+  },
+  "aggs": {
+    "NAME": {
+      "histogram": {
+        "field": "bytes",
+        "interval": 200,
+        "missing": 0,
+        "offset": 200,
+        "hard_bounds": {
+          "min": 4700,
+          "max": 6000
+        },
+        "min_doc_count": 50,
+        "keyed": true
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v2*/_search?size=0
+{
+  "query": {
+    "match_all": {}
+  },
+  "aggs": {
+    "NAME": {
+      "date_histogram": {
+        "field": "@timestamp",
+        "interval": "10m"
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v2*/_search?size=0
+{
+  "query": {
+    "match_all": {}
+  },
+  "aggs": {
+    "NAME": {
+      "geohash_grid": {
+        "field": "geoip.location",
+        "precision": 2,
+        "bounds": {
+          "top_left": "POINT (-121.7352672 49.9858749)",
+          "bottom_right": "POINT (-64.5674731 33.8081914)"
+        }
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v2*/_search?size=0
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "term": {
+            "geoip.country_name": "United States"
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "NAME": {
+      "geohash_grid": {
+        "field": "geoip.location",
+        "precision": 4,
+        "bounds": {
+          "top_left": "POINT (-121.7352672 49.9858749)",
+          "bottom_right": "POINT (-64.5674731 33.8081914)"
+        }
+      }
+    }
+  }
+}
+
+
+PUT /_bulk?refresh
+{ "index" : { "_index" : "flight-routes-v1" } }
+{ "origin": "NewYork", "destinations": ["Paris", "Amsterdam", "Boston", "London"]}
+{ "index" : { "_index" : "flight-routes-v1" } }
+{ "origin": "Paris", "destinations": ["London"]}
+{ "index" : { "_index" : "flight-routes-v1" } }
+{ "origin": "Amsterdam", "destinations": ["London", "Paris"]}
+{ "index" : { "_index" : "flight-routes-v1" } }
+{ "origin": "Boston", "destinations": ["NewYork"]}
+{ "index" : { "_index" : "flight-routes-v1" } }
+{ "origin": "London", "destinations": ["NewYork", "Barcelona"]}
+{ "index" : { "_index" : "flight-routes-v1" } }
+{ "origin": "Barcelona", "destinations": ["London","Amsterdam"]}
+
+GET flight-routes-v1/_search?size=0
+{
+  "aggs": {
+    "NAME": {
+      "terms": {
+        "field": "destinations.keyword",
+        "size": 10
+      }
+    }
+  }
+}
+          
+GET /flight-routes-v1/_search?pretty
+{
+  "size": 0,
+  "aggs" : {
+    "interactions" : {
+      "adjacency_matrix" : {
+        "filters" : {
+          "flights_to_NewYork" : { "term" : { "destinations.keyword" : "NewYork" }},
+          "flights_to_Barcelona" : { "term" : { "destinations.keyword" : "Barcelona" }}
+        }
+      }
+    }
+  }
+}
+
+GET /flight-routes-v1/_search?pretty
+{
+  "size": 0,
+  "aggs" : {
+    "interactions" : {
+      "adjacency_matrix" : {
+        "filters" : {
+          "flights_to_NewYork" : { "term" : { "destinations.keyword" : "NewYork" }},
+          "flights_to_Barcelona" : { "term" : { "destinations.keyword" : "Barcelona" }}
+        }
+      },"aggs": {
+        "NAME": {
+          "top_hits": {
+            "size": 10,
+            "_source": {
+              "includes": "origin"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+PUT /_bulk?refresh
+{ "index" : { "_index" : "access-rights-v1" } }
+{ "user": "Alan", "service": ["apache"]}
+{ "index" : { "_index" : "access-rights-v1" } }
+{ "user": "Be", "service": ["ssh", "apache"]}
+{ "index" : { "_index" : "access-rights-v1" } }
+{ "user": "Celi", "service": ["sendmail"]}
+{ "index" : { "_index" : "access-rights-v1" } }
+{ "user": "Dan", "service": ["ssh"]}
+{ "index" : { "_index" : "access-rights-v1" } }
+{ "user": "Eli", "service": ["sendmail"]}
+{ "index" : { "_index" : "access-rights-v1" } }
+{ "user": "Fin", "service": ["apache","sendmail","ssh"]}
+
+GET access-rights-v1/_search?size=0
+{
+  "aggs": {
+    "NAME": {
+      "terms": {
+        "field": "service.keyword",
+        "size": 10
+      }
+    }
+  }
+}
+
+GET /access-rights-v1/_search?pretty
+{
+  "size": 0,
+  "aggs" : {
+    "interactions" : {
+      "adjacency_matrix" : {
+        "filters" : {
+          "apache" : { "term" : { "service" : "apache" }},
+          "ssh" : { "term" : { "service" : "ssh" }},
+          "sendmail" : { "term" : { "service" : "sendmail" }}
+        }
+      }
+    }
+  }
+}
+
+GET /access-rights-v1/_search?pretty
+{
+  "size": 0,
+  "aggs" : {
+    "interactions" : {
+      "adjacency_matrix" : {
+        "filters" : {
+          "apache" : { "term" : { "service" : "apache" }},
+          "ssh" : { "term" : { "service" : "ssh" }},
+          "sendmail" : { "term" : { "service" : "sendmail" }}
+        }
+      },"aggs": {
+        "NAME": {
+          "top_hits": {
+            "size": 10,
+            "_source": {
+              "includes": "user"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+-----------------------------------------------------------------------------
+GET mylogs-apache-v2*/_search?size=0
+{
+  "size": 0,
+  "aggs": {
+    "NAME1": {
+      "date_histogram": {
+        "field": "@timestamp",
+        "calendar_interval": "day"
+      },
+      "aggs": {
+        "NAME2": {
+          "max": {
+            "field": "bytes"
+          }
+        }
+      }
+    },
+    "summary_bytes_min": {
+      "min_bucket": {
+        "buckets_path": "NAME1>NAME2.value",
+        "gap_policy": "skip"
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v2*/_search?size=0
+{
+  "size": 0,
+  "aggs": {
+    "NAME1": {
+      "date_histogram": {
+        "field": "@timestamp",
+        "calendar_interval": "day",
+        "min_doc_count": 100000
+      },
+      "aggs": {
+        "NAME2": {
+          "max": {
+            "field": "bytes"
+          }
+        }
+      }
+    },
+    "summary_bytes_min": {
+      "min_bucket": {
+        "buckets_path": "NAME1>NAME2.value",
+        "gap_policy": "skip"
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v2*/_search?size=0
+{
+  "query": {
+    "match_all": {}
+  },
+  "aggs": {
+    "NAME1": {
+      "date_histogram": {
+        "field": "@timestamp",
+        "interval": "day",
+        "min_doc_count": 100000
+      },
+      "aggs": {
+        "NAME2": {
+          "avg": {
+            "field": "bytes"
+          }
+        }
+      }
+    },
+    "summary_bytes_avg": {
+      "avg_bucket": {
+        "buckets_path": "NAME1>NAME2",
+        "gap_policy": "skip"
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v2*/_search?size=0
+{
+  "size": 0,
+  "aggs": {
+    "NAME1": {
+      "date_histogram": {
+        "field": "@timestamp",
+        "calendar_interval": "hour"
+      },
+      "aggs": {
+        "max_bytes": {
+          "max": {
+            "field": "bytes"
+          }
+        },
+        "the_difference_with_prev": {
+          "derivative": {
+            "buckets_path": "max_bytes"
+          }
+        }
+      }
+    }
+  }
+}

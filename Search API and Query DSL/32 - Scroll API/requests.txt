@@ -1,0 +1,57 @@
+POST /mylogs-apache-v2*/_search?scroll=20s
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+POST /mylogs-apache-v2*/_search?scroll=20s
+{
+  "query": {
+    "term": {
+      "verb": {
+        "value": "POST"
+      }
+    }
+  }
+}
+
+POST /_search/scroll
+{
+  "scroll_id": "FGluY2x1ZGVfY29udGV4dF91dWlkDnF1ZXJ5VGhlbkZldGNoAxZVMnlQdEw4dFN0NjlDWjhDd0VDOXBBAAAAAAAACFEWU3IxeXZFVmVTQWFYX2pXcS01OVBpURZVMnlQdEw4dFN0NjlDWjhDd0VDOXBBAAAAAAAACFIWU3IxeXZFVmVTQWFYX2pXcS01OVBpURZVMnlQdEw4dFN0NjlDWjhDd0VDOXBBAAAAAAAACFMWU3IxeXZFVmVTQWFYX2pXcS01OVBpUQ==",
+  "scroll" : "20s"
+}
+
+
+
+
+function scan_documents(scrollId, a_index, a_size) {
+    return new Promise(function (resolve, reject) {
+        const starttt = new Date().getTime();        
+        if (scrollId != null) {
+
+            elasticconnection.scroll({
+                scrollId: scrollId,
+                scroll: '20s'
+            }, function (err, response) {
+                if (err) { reject(); } else { resolve({ result: response, scrollId: scrollId }); }
+            });
+
+        } else {
+
+            elasticconnection.search({
+                index: a_index,
+                type: '_doc',
+                scroll: '20s',
+                version: true,
+                body: {
+                    query: { "match_all": {} }
+                },
+                size: a_size
+            }, function (err, response) {
+                if (err) { reject(); } else { resolve({ result: response, scrollId: response._scroll_id }); }
+            });
+        }
+    });
+}
+

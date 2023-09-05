@@ -1,0 +1,33 @@
+GET mylogs-apache-v2*/_search
+{
+  "query": {
+    "wildcard": {
+      "agent": {
+        "value": "*ire?ox"
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v2*/_search
+{
+  "query": {
+    "term": {
+      "agent": {
+        "value": "firefox"
+      }
+    }
+  }
+}
+
+
+GET mylogs-apache-v2*/_search
+{
+  "query": {
+    "prefix": {
+      "agent": {
+        "value": "fire"
+      }
+    }
+  }
+}

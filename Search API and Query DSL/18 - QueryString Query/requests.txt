@@ -1,0 +1,83 @@
+GET mylogs-apache-v1-*/_search
+{
+  "query": {
+    "query_string": {
+      "query": "Mozilla Gecko/45",
+      "default_field": "agent"
+    }
+  }
+}
+
+GET mylogs-apache-v1-*/_search
+{
+  "query": {
+    "query_string": {
+      "query": "(Mozilla AND Gecko) KONG",
+      "default_field": "agent"
+    }
+  }
+}
+
+GET mylogs-apache-v1-*/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "agent": {
+              "value": "mozilla"
+            }
+          }
+        },
+        {
+          "term": {
+            "agent": {
+              "value": "gecko"
+            }
+          }
+        }
+      ],
+      "should": [
+        {
+          "term": {
+            "agent": {
+              "value": "45"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+GET mylogs-apache-v1-*/_search
+{
+  "query": {
+    "query_string": {
+      "query": "(Mozilla AND Gecko) KONG",
+      "fields" : ["agent", "geoip.city_name"]
+    }
+  }
+}
+
+GET mylogs-apache-v1-*/_search
+{
+  "query": {
+    "query_string": {
+      "query": "(*ozilla AND *ecko) *ONG",
+      "fields" : ["agent", "geoip.city_name"],
+      "allow_leading_wildcard": false
+    }
+  }
+}
+
+GET mylogs-apache-v1-*/_search
+{
+  "query": {
+    "query_string": {
+      "query": "\"KHTML like Gecko FxiOS 9.0n6194.0\"",
+      "fields" : ["agent", "geoip.city_name"]
+    }
+  }
+}
