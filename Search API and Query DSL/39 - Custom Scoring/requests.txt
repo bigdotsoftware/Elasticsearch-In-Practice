@@ -127,6 +127,22 @@ POST mylogs-apache-v2*/_search
     }
 }
 
+
+POST mylogs-apache-v2*/_search?search_type=query_then_fetch
+{
+  "_source": {
+    "includes": "agent"
+    }, 
+   "query": {
+      "match_phrase_prefix": {
+         "agent": {
+            "query": "a"
+         }
+      }
+   }
+}
+
+
 POST /mylogs-apache-v2*/_search
 {
   "query": {
