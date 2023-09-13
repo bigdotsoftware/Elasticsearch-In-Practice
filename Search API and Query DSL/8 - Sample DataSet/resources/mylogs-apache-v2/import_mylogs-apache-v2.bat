@@ -2,7 +2,7 @@
 SETLOCAL EnableDelayedExpansion
 set AUTH=""
 REM To enable standard HTTP basic authentication, set user, password and uncomment below line (don't remove following space after password)
-REM set AUTH="--user my_user:my_password "
+REM set AUTH=--user my_user:my_password 
 set ELASTIC_HOST="http://localhost:9200"
 
 echo "creating index 'mylogs-apache-v2-2022.08.12' with mapping ...."

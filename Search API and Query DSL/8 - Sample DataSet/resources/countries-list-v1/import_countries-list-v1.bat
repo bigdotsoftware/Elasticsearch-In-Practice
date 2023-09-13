@@ -2,7 +2,7 @@
 SETLOCAL EnableDelayedExpansion
 set AUTH=""
 REM To enable standard HTTP basic authentication, set user, password and uncomment below line (don't remove following space after password)
-REM set AUTH="--user my_user:my_password "
+REM set AUTH=--user my_user:my_password 
 set ELASTIC_HOST="http://localhost:9200"
 echo "creating index 'countries-list-v1' with mapping ...."
 curl -s -XPUT "%ELASTIC_HOST%/countries-list-v1" -H "Content-Type: application/json" %AUTH%-o nul --data-binary "@countries-list-v1_mapping.json" 
