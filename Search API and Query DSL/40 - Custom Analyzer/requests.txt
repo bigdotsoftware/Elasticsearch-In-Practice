@@ -1,0 +1,636 @@
+---------------------------------------------------------------------
+stopwords
+---------------------------------------------------------------------
+DELETE animals-v1
+
+PUT animals-v1
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1,
+      "analysis": {
+        "analyzer": {
+          "my_analyzer": {
+            "tokenizer": "standard",
+            "filter": [ "lowercase", "my_stopwords" ]
+          }
+        },
+        "filter": {
+          "my_stopwords": {
+            "type": "stop",
+            "lenient": true,
+            "stopwords": [ "and", "is", "are", "the" ]
+          }
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "title": {
+        "type": "text"
+      },
+      "description": {
+        "type": "text",
+        "analyzer": "my_analyzer"
+      }
+    }
+  }
+}
+
+POST animals-v1/_doc?refresh=true
+{
+  "title" : "Cat is a friend",
+  "description" : "Cat is friendly and fluffy."
+}
+
+POST animals-v1/_search
+{
+  "query": {
+    "term": {
+      "title": {
+        "value": "is"
+      }
+    }
+  }
+}
+
+POST animals-v1/_search
+{
+  "query": {
+    "term": {
+      "description": {
+        "value": "is"
+      }
+    }
+  }
+}
+
+POST animals-v1/_analyze
+{
+  "text": "Cat is friendly and fluffy."
+}
+
+POST animals-v1/_analyze
+{
+  "text": "Cat is friendly and fluffy.",
+  "analyzer": "my_analyzer"
+}
+
+---------------------------------------------------------------------
+stopwords with multi-field
+---------------------------------------------------------------------
+
+DELETE animals-v1
+
+PUT animals-v1
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1,
+      "analysis": {
+        "analyzer": {
+          "my_analyzer": {
+            "tokenizer": "standard",
+            "filter": [ "lowercase", "my_stopwords" ]
+          }
+        },
+        "filter": {
+          "my_stopwords": {
+            "type": "stop",
+            "lenient": true,
+            "stopwords": [ "and", "is", "are", "the" ]
+          }
+        }
+      }
+    }
+  },
+    "mappings": {
+        "properties": {
+        "title": {
+            "type": "text"
+        },
+        "description": {
+            "type": "text",
+            "analyzer": "my_analyzer",
+            "fields": {
+            "with_default_analyzer" : {
+                "type" : "text"
+            }
+            }
+        }
+        }
+    }
+}
+
+POST animals-v1/_doc?refresh=true
+{
+  "title" : "Cat is a friend",
+  "description" : "Cat is friendly and fluffy."
+}
+
+
+POST animals-v1/_search
+{
+  "query": {
+    "term": {
+      "description.with_default_analyzer": {
+        "value": "is"
+      }
+    }
+  }
+}
+
+---------------------------------------------------------------------
+synonyms
+---------------------------------------------------------------------
+
+DELETE animals-v1
+
+PUT animals-v1
+{
+  "settings": {
+    "index" : {
+      "number_of_shards": 1,
+      "number_of_replicas": 1,
+      "analysis" : {
+        "analyzer" : {
+          "my_analyzer" : {
+            "tokenizer" : "standard",
+            "filter" : ["lowercase", "my_stopwords", "my_synonyms"]
+          }
+        },
+        "filter" : {
+          "my_stopwords": {
+            "type": "stop",
+            "lenient": true,
+            "stopwords": [ "and", "is", "are", "the" ]
+          },
+          "my_synonyms" : {
+            "type" : "synonym",
+            "lenient": true,
+            "synonyms" : [
+              "cat => cat feline pussycat kitty kitten mouser", 
+              "dog => dog doggy puppy canine"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "title": {
+        "type": "text"
+      },
+      "description": {
+        "type": "text",
+        "analyzer": "my_analyzer"
+      }
+    }
+  }
+}
+
+
+
+POST animals-v1/_doc?refresh=true
+{
+  "title" : "Cat is a friend",
+  "description" : "Cat is friendly and fluffy."
+}
+
+POST animals-v1/_search
+{
+  "query": {
+    "term": {
+      "description": {
+        "value": "cat"
+      }
+    }
+  }
+}
+
+POST animals-v1/_search
+{
+  "query": {
+    "term": {
+      "description": {
+        "value": "kitty"
+      }
+    }
+  }
+}
+
+POST animals-v1/_analyze
+{
+  "text": "Cat is friendly and fluffy.",
+  "analyzer": "my_analyzer"
+}
+
+---------------------------------------------------------------------
+ascii folding
+---------------------------------------------------------------------
+DELETE animals-v1
+
+PUT animals-v1
+{
+  "settings": {
+    "index" : {
+      "number_of_shards": 1,
+      "number_of_replicas": 1,
+      "analysis" : {
+        "analyzer" : {
+          "my_analyzer" : {
+            "tokenizer" : "standard",
+            "filter" : ["lowercase", "my_stopwords", "my_synonyms", "my_ascii_folding"]
+          }
+        },
+        "filter" : {
+          "my_stopwords": {
+            "type": "stop",
+            "lenient": true,
+            "stopwords": [ "and", "is", "are", "the" ]
+          },
+          "my_synonyms" : {
+            "type" : "synonym",
+            "lenient": true,
+            "synonyms" : [
+              "cat => cat feline pussycat kitty kitten mouser", 
+              "dog => dog doggy puppy canine"
+            ]
+          },
+          "my_ascii_folding" : {
+            "type": "asciifolding",
+            "preserve_original": true
+          }
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "title": {
+        "type": "text"
+      },
+      "description": {
+        "type": "text",
+        "analyzer": "my_analyzer"
+      }
+    }
+  }
+}
+
+
+
+POST animals-v1/_doc?refresh=true
+{
+  "title" : "Bär ist flauschig",
+  "description" : "Bär ist groß und flauschig"
+}
+
+POST animals-v1/_search
+{
+  "query": {
+    "term": {
+      "title": {
+        "value": "bär"
+      }
+    }
+  }
+}
+
+POST animals-v1/_search
+{
+  "query": {
+    "term": {
+      "title": {
+        "value": "bar"
+      }
+    }
+  }
+}
+
+POST animals-v1/_search
+{
+  "query": {
+    "term": {
+      "description": {
+        "value": "bär"
+      }
+    }
+  }
+}
+
+POST animals-v1/_search
+{
+  "query": {
+    "term": {
+      "description": {
+        "value": "bar"
+      }
+    }
+  }
+}
+
+POST animals-v1/_analyze
+{
+  "text": "Bär ist groß und flauschig",
+  "analyzer": "my_analyzer"
+}
+
+
+---------------------------------------------------------------------
+            custom tokenizer
+---------------------------------------------------------------------
+
+DELETE messages-v1
+
+PUT messages-v1
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "my_analyzer": {
+          "tokenizer": "my_tokenizer",
+          "filter": ["my_char_filter"]
+        }
+      },
+      "tokenizer": {
+        "my_tokenizer": {
+          "type": "simple_pattern",
+          "pattern": "[0-9]{10}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{3}.[0-9]{3}.[0-9]{4}|[a-zA-Z]+"
+        }
+      },
+      "filter": {
+        "my_char_filter": {
+          "type": "pattern_replace",
+          "pattern": "[-.]",
+          "replacement": ""
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "message": {
+        "type": "text",
+        "analyzer": "my_analyzer"
+      }
+    }
+  }
+}
+
+POST messages-v1/_doc?refresh=true
+{
+  "message" : "Hey, my phone number is 786-335-5140 and his number is +1.8965847890"
+}
+
+POST messages-v1/_search
+{
+  "query": {
+    "term": {
+      "message": {
+        "value": "7863355140"
+      }
+    }
+  }
+}
+
+POST messages-v1/_analyze
+{
+  "analyzer": "my_analyzer",
+  "text": "Hey, my phone number is 786-335-5140 and his number is +1.8965847890"
+}
+
+
+
+-------------------------------------------------
+    char_filter to get inner text from HTML
+-------------------------------------------------
+DELETE messages-v1
+
+PUT messages-v1
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "my_analyzer": {
+          "char_filter": ["html_strip"],
+          "tokenizer": "my_tokenizer",
+          "filter": ["my_char_filter"]
+        }
+      },
+      "tokenizer": {
+        "my_tokenizer": {
+          "type": "simple_pattern",
+          "pattern": "[0-9]{10}|[0-9]{3}-[0-9]{3}-[0-9]{4}|[0-9]{3}.[0-9]{3}.[0-9]{4}|[a-zA-Z]+"
+        }
+      },
+      "filter": {
+        "my_char_filter": {
+          "type": "pattern_replace",
+          "pattern": "[-.]",
+          "replacement": ""
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "message": {
+        "type": "text",
+        "analyzer": "my_analyzer"
+      }
+    }
+  }
+}
+
+POST messages-v1/_doc?refresh=true
+{
+  "message" : "<b><span class=\"caption1234567890\">Hey</span>, my phone number is 786-335-5140 and his number is +1.8965847890</b>"
+}
+
+POST messages-v1/_search
+{
+  "query": {
+    "term": {
+      "message": {
+        "value": "7863355140"
+      }
+    }
+  }
+}
+
+POST messages-v1/_analyze
+{
+  "analyzer": "default",
+  "text": "<b><span class=\"caption1234567890\">Hey</span>, my phone number is 786-335-5140 and his number is +1.8965847890</b>"
+}
+
+POST messages-v1/_analyze
+{
+  "analyzer": "my_analyzer",
+  "text": "<b><span class=\"caption1234567890\">Hey</span>, my phone number is 786-335-5140 and his number is +1.8965847890</b>"
+}
+
+
+-------------------------------------------------
+                    query analyzers
+-------------------------------------------------
+POST messages-v1/_search
+{
+  "query": {
+    "term": {
+      "message": {
+        "value": "786.335.5140"
+      }
+    }
+  }
+}
+
+POST messages-v1/_search
+{
+  "query": {
+    "match": {
+      "message": {
+        "query": "786.335.5140",
+        "analyzer": "my_analyzer"
+      }
+    }
+  }
+}
+
+-------------------------------------------------
+                    quote_analyzer
+-------------------------------------------------
+DELETE animals-v2
+
+PUT animals-v2
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1,
+      "analysis": {
+        "analyzer": {
+          "my_analyzer": {
+            "tokenizer": "standard",
+            "filter": [ "lowercase" ]
+          },
+          "my_stop_analyzer": {
+            "tokenizer": "standard",
+            "filter": [ "lowercase", "my_stopwords"]
+          }
+        },
+        "filter": {
+          "my_stopwords": {
+            "type": "stop",
+            "lenient": true,
+            "stopwords": [ "and", "is", "are", "the" ]
+          }
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "description": {
+        "type": "text",
+        "analyzer": "my_analyzer",
+        "search_analyzer":"my_stop_analyzer", 
+        "search_quote_analyzer":"my_analyzer"
+      }
+    }
+  }
+}
+
+POST animals-v2/_doc?refresh=true
+{
+  "description" : "Cats are friends and super-fluffy"
+}
+
+
+
+GET animals-v2/_search
+{
+   "query":{
+     "term": {
+       "description": {
+         "value": "are"
+       }
+     }
+   }
+}
+
+GET animals-v2/_search
+{
+   "query":{
+      "query_string":{
+          "default_field": "description",
+          "query":"are",
+          "default_operator": "AND"
+      }
+   }
+}
+
+GET animals-v2/_search
+{
+   "query":{
+      "query_string":{
+          "default_field": "description",
+          "query":"\"are\"",
+          "default_operator": "AND"
+      }
+   }
+}
+
+
+GET animals-v2/_search
+{
+   "query":{
+      "query_string":{
+          "default_field": "description",
+          "query":"cats friends",
+          "default_operator": "AND"
+      }
+   }
+}
+
+
+
+GET animals-v2/_search
+{
+   "query":{
+      "query_string":{
+          "default_field": "description",
+          "query":"\"cats friends\"",
+          "default_operator": "AND"
+      }
+   }
+}
+
+GET animals-v2/_search
+{
+   "query":{
+      "query_string":{
+          "default_field": "description",
+          "query":"\"cats are friends\"",
+          "default_operator": "AND"
+      }
+   }
+}
+
+
+
+POST animals-v2/_search
+{
+  "query": {
+    "query_string": {
+      "default_field": "description",
+      "query": "super-f*",
+      "analyze_wildcard": false
+    }
+  }
+}
